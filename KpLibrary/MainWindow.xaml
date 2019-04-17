@@ -4,9 +4,64 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KpLibrary"
+        xmlns:vm="clr-namespace:KpLibrary.ViewModel"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding ElementName=Frame,Path=Content.Title}"
+        Height="700"
+        Width="1000"
+        MinWidth="600"
+        MinHeight="450"
+        WindowStartupLocation="CenterScreen">
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Button
+            Width="70"
+            Background="#FF4E4E"
+            HorizontalAlignment="Right"
+            Content="Выход"
+            Command="{Binding Exit}"
+            Visibility="{Binding ExitVisible}" />
+
+        <Button
+            HorizontalAlignment="Left"
+            Content="&lt;"
+            Width="30"
+            Height="30"
+            Margin="5"
+            BorderBrush="Transparent"
+            Background="#FF445C93"
+            Foreground="White"
+            FontWeight="Bold"
+            Visibility="{Binding BackVisible}"
+            Command="{Binding Back}">
+            <Button.Style>
+                <Style>
+                    <Style.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="360" />
+                        </Style>
+                    </Style.Resources>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <Frame
+            IsTabStop="False"
+            Name="Frame"
+            Grid.Row="1"
+            NavigationUIVisibility="Hidden">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ContentRendered">
+                    <i:InvokeCommandAction
+                        Command="{Binding ContentRender}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Frame>
     </Grid>
 </Window>

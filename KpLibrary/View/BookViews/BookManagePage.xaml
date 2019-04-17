@@ -1,0 +1,96 @@
+﻿<Page x:Class="KpLibrary.View.BookViews.BookManagePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:KpLibrary.View.BookViews"
+      xmlns:vm="clr-namespace:KpLibrary.ViewModel.BookViewModels"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      mc:Ignorable="d"
+      d:DesignHeight="700"
+      d:DesignWidth="1000"
+      Title="Библиотека - управление книгами">
+
+    <Page.DataContext>
+        <vm:BookManageViewModel />
+    </Page.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding PageLoaded}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                Text="Поиск:" />
+
+            <xctk:WatermarkTextBox
+                Grid.Column="1"
+                Width="auto"
+                HorizontalAlignment="Stretch"
+                Watermark="Введите ключевое слово"
+                Text="{Binding KeyWord,UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TextChanged">
+                        <i:InvokeCommandAction
+                            Command="{Binding Search}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xctk:WatermarkTextBox>
+        </Grid>
+
+        <DataGrid ColumnWidth="*" Grid.Row="1" SelectedItem="{Binding SelectedBook}" ItemsSource="{Binding Books}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="250" Header="QR CODE">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Height="200" Width="200" Source="{Binding QrCode}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="250" Header="Избражение">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Height="200" Width="200" Source="{Binding GetImage}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn FontWeight="Bold" FontSize="25" Binding="{Binding Name}" Header="Название" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Сохранить QR"
+                Command="{Binding SaveQR}" />
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Изменить"
+                Command="{Binding ChangeBook}" />
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Удалить"
+                Command="{Binding DeleteBook}" />
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Добавить"
+                Command="{Binding AddBook}" />
+        </StackPanel>
+    </Grid>
+</Page>

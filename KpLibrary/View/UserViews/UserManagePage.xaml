@@ -1,0 +1,94 @@
+﻿<Page x:Class="KpLibrary.View.UserViews.UserManagePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:KpLibrary.View.UserViews"
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:vm="clr-namespace:KpLibrary.ViewModel.UserViewModels"
+      mc:Ignorable="d"
+      d:DesignHeight="550"
+      d:DesignWidth="800"
+      Title="Библиотека - управление пользователями">
+
+    <Page.DataContext>
+        <vm:UserManageViewModel />
+    </Page.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding UpdatePage}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                Text="Поиск:" />
+
+            <xctk:WatermarkTextBox
+                Grid.Column="1"
+                Width="auto"
+                HorizontalAlignment="Stretch"
+                Watermark="Введите ключевое слово"
+                Text="{Binding KeyWord,UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TextChanged">
+                        <i:InvokeCommandAction
+                            Command="{Binding Search}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xctk:WatermarkTextBox>
+        </Grid>
+
+        <DataGrid ColumnWidth="*" Grid.Row="1" SelectedItem="{Binding SelectedUser}" ItemsSource="{Binding Users}">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Ожидает подтверждения">
+                            <Setter Property="Background" Value="#F8CB4E" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Заблокирован">
+                            <Setter Property="Background" Value="#FFB6B6" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Email}" Header="Email" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="ФИО" />
+                <DataGridTextColumn Binding="{Binding Group}" Header="Группа" />
+                <DataGridTextColumn Binding="{Binding Status}" Header="Статус" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button
+                Width="180"
+                IsEnabled="{Binding IsLoad}"
+                Content="Заблокировать"
+                Command="{Binding BlockUser}" />
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Подтвердить"
+                Command="{Binding AcceptUser}" />
+            <Button
+                IsEnabled="{Binding IsLoad}"
+                Content="Добавить"
+                Command="{Binding AddUser}" />
+        </StackPanel>
+    </Grid>
+</Page>
